@@ -3,6 +3,7 @@
 
 int main(void)
 {
+	srand(time(NULL));
 	init();
 	sim();
 	SDL_Quit();

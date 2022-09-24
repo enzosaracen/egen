@@ -6,14 +6,15 @@
 	((v) >> (8*1)) & 0xff,	\
 	((v) >> (8*0)) & 0xff
 
+#define UNIT(v)	\
+	(int)((v)/LG*W)
+
 #define AGENT_PAD	0.2
 #define FOOD_PAD	0.4
 #define COL_W		0xffffffff
 #define COL_R		0xff0000ff
-#define COL_B		0x0000ffff
-
-#define UNIT(v)	\
-	(int)((v)/LG*W)
+#define COL_G		0x00ff00ff
+#define COL_B		0x00007fff
 
 double dtab[NDIR][6] = {
 	[DIR_LEFT]	= {1.0, 0.0, 1.0, 1.0, 0.0, 0.5},
@@ -22,11 +23,16 @@ double dtab[NDIR][6] = {
 	[DIR_DOWN]	= {0.0, 0.0, 1.0, 0.0, 0.5, 1.0},
 };
 
-
 void drawcell(double i, double j)
 {
 	int k, p[6];
 	Agent *a;
+	SDL_Rect wall = {
+		UNIT(i)+1,
+		UNIT(j)+1,
+		UNIT(1.0)-1,
+		UNIT(1.0)-1,
+	};
 
 	switch(grid[(int)i][(int)j].type) {
 	case CELL_AGENT:
@@ -37,9 +43,13 @@ void drawcell(double i, double j)
 		aatrigonRGBA(rnd, p[0], p[1], p[2], p[3], p[4], p[5], COL(COL_R));
 		break;
 	case CELL_FOOD:
-		filledCircleRGBA(rnd, UNIT(i+0.5), UNIT(j+0.5), UNIT(0.5-FOOD_PAD/2), COL(COL_B));
-		aacircleRGBA(rnd, UNIT(i+0.5), UNIT(j+0.5), UNIT(0.5-FOOD_PAD/2), COL(COL_B));
-		aacircleRGBA(rnd, UNIT(i+0.5), UNIT(j+0.5)-1, UNIT(0.5-FOOD_PAD/2), COL(COL_B));
+		filledCircleRGBA(rnd, UNIT(i+0.5), UNIT(j+0.5), UNIT(0.5-FOOD_PAD/2), COL(COL_G));
+		aacircleRGBA(rnd, UNIT(i+0.5), UNIT(j+0.5), UNIT(0.5-FOOD_PAD/2), COL(COL_G));
+		aacircleRGBA(rnd, UNIT(i+0.5), UNIT(j+0.5)-1, UNIT(0.5-FOOD_PAD/2), COL(COL_G));
+		break;
+	case CELL_WALL:
+		SDL_SetRenderDrawColor(rnd, COL(COL_B));
+		SDL_RenderFillRect(rnd, &wall);
 		break;
 	}
 }
@@ -62,11 +72,11 @@ void drawgrid(void)
 int step(void)
 {
 	input();
-	agentrun();
 	SDL_SetRenderDrawColor(rnd, COL(0));
 	SDL_RenderClear(rnd);
 	drawgrid();
 	SDL_RenderPresent(rnd);
+	agentrun();
 	return quit;
 }
 
@@ -79,8 +89,6 @@ void sim(void)
 		for(j = 0; j < 6; j++)
 			if(dtab[i][j] != 0.5)
 				dtab[i][j] = fabs(dtab[i][j]-AGENT_PAD);
-	grid[4][4].type = CELL_AGENT;
-	grid[4][4].agent = &a;
-	grid[6][6].type = CELL_FOOD;
+	agentinit();
 	loop(1000, &step);
 }

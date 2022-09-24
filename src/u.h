@@ -1,4 +1,5 @@
 #include <math.h>
+#include <time.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdint.h>
@@ -22,6 +23,8 @@ enum {
 	CELL_EMPTY = 0,
 	CELL_AGENT,
 	CELL_FOOD,
+	CELL_WALL,
+	NTYPE,
 };
 
 enum {
@@ -32,8 +35,21 @@ enum {
 	NDIR,
 };
 
+enum {
+	ACT_TLEFT,
+	ACT_TUP,
+	ACT_TRIGHT,
+	ACT_TDOWN,
+	ACT_MOVE,
+	NACT,
+};
+
 struct Agent {
+	int	food;
 	int	dir;
+	int	front;
+	int	act[NTYPE][NDIR];
+	int	x, y;
 };
 
 struct Cell {
