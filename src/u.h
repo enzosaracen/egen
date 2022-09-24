@@ -1,3 +1,4 @@
+#include <math.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdint.h>
@@ -5,14 +6,40 @@
 #include <SDL2/SDL.h>
 #include <SDL2_gfxPrimitives.h>
 
-#define H 500
-#define W 500
+#define H	500
+#define W	500
+#define LG	10	
 
 #ifndef EXTERN
 #define EXTERN extern
 #endif
 
 typedef uint32_t uint32;
+typedef struct Agent Agent;
+typedef struct Cell Cell;
+
+enum {
+	CELL_EMPTY = 0,
+	CELL_AGENT,
+	CELL_FOOD,
+};
+
+enum {
+	DIR_LEFT = 0,
+	DIR_UP,
+	DIR_RIGHT,
+	DIR_DOWN,
+	NDIR,
+};
+
+struct Agent {
+	int	dir;
+};
+
+struct Cell {
+	int	type;
+	Agent	*agent;
+};
 
 /*
  *	lib.c
@@ -23,10 +50,17 @@ void	loop(uint32, int (*)(void));
 void	init(void);
 
 /*
- *	sim.c
+ *	viz.c
  */
 void	sim(void);
+
+/*
+ *	agent.c
+ */
+void	agentinit(void);
+void	agentrun(void);
 
 EXTERN	SDL_Window	*scr;
 EXTERN	SDL_Renderer	*rnd;
 EXTERN	int		quit;
+EXTERN	Cell		grid[LG][LG];
