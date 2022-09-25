@@ -18,7 +18,7 @@
 
 double dtab[NDIR][6] = {
 	[DIR_LEFT]	= {1.0, 0.0, 1.0, 1.0, 0.0, 0.5},
-	[DIR_UP]	= {0.0, 0.0, 1.0, 0.0, 0.5, 1.0},
+	[DIR_UP]	= {0.0, 1.0, 1.0, 1.0, 0.5, 0.0},
 	[DIR_RIGHT]	= {0.0, 0.0, 0.0, 1.0, 1.0, 0.5},
 	[DIR_DOWN]	= {0.0, 0.0, 1.0, 0.0, 0.5, 1.0},
 };
@@ -28,8 +28,8 @@ void drawcell(double i, double j)
 	int k, p[6];
 	Agent *a;
 	SDL_Rect wall = {
-		UNIT(i)+1,
 		UNIT(j)+1,
+		UNIT(i)+1,
 		UNIT(1.0)-1,
 		UNIT(1.0)-1,
 	};
@@ -43,9 +43,9 @@ void drawcell(double i, double j)
 		aatrigonRGBA(rnd, p[0], p[1], p[2], p[3], p[4], p[5], COL(COL_R));
 		break;
 	case CELL_FOOD:
-		filledCircleRGBA(rnd, UNIT(i+0.5), UNIT(j+0.5), UNIT(0.5-FOOD_PAD/2), COL(COL_G));
-		aacircleRGBA(rnd, UNIT(i+0.5), UNIT(j+0.5), UNIT(0.5-FOOD_PAD/2), COL(COL_G));
-		aacircleRGBA(rnd, UNIT(i+0.5), UNIT(j+0.5)-1, UNIT(0.5-FOOD_PAD/2), COL(COL_G));
+		filledCircleRGBA(rnd, UNIT(j+0.5), UNIT(i+0.5), UNIT(0.5-FOOD_PAD/2), COL(COL_G));
+		aacircleRGBA(rnd, UNIT(j+0.5), UNIT(i+0.5), UNIT(0.5-FOOD_PAD/2), COL(COL_G));
+		aacircleRGBA(rnd, UNIT(j+0.5), UNIT(i+0.5)-1, UNIT(0.5-FOOD_PAD/2), COL(COL_G));
 		break;
 	case CELL_WALL:
 		SDL_SetRenderDrawColor(rnd, COL(COL_B));

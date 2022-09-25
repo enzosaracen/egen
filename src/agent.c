@@ -1,14 +1,15 @@
 #include "u.h"
 
-#define NAGENT 5
+#define NAGENT	5
+#define NFOOD	5	
 
 Agent alist[NAGENT];
 
 int adtab[NDIR][2] = {
 	[DIR_LEFT] = 	{-1, 0},
-	[DIR_UP] = 	{0, 1},
+	[DIR_UP] = 	{0, -1},
 	[DIR_RIGHT] = 	{1, 0},
-	[DIR_DOWN] = 	{0, -1},
+	[DIR_DOWN] = 	{0, 1},
 };
 
 void agentinit(void)
@@ -22,7 +23,8 @@ void agentinit(void)
 			for(k = 0; k < NDIR; k++) {
 				do {
 					a->act[j][k] = rand() % NACT;
-				} while(j == CELL_WALL && alist[i].act[j][k] == ACT_MOVE);
+				} while(((j == CELL_WALL || j == CELL_AGENT) && alist[i].act[j][k] == ACT_MOVE)
+					|| (alist[i].act[j][k] == k));
 			}
 		do {
 			a->x = rand() % LG;
@@ -30,6 +32,13 @@ void agentinit(void)
 		} while(grid[a->y][a->x].type != CELL_EMPTY);
 		grid[a->y][a->x].type = CELL_AGENT;
 		grid[a->y][a->x].agent = a;
+	}
+	for(i = 0; i < NFOOD; i++) {
+		do {
+			j = rand() % LG;
+			k = rand() % LG;
+		} while(grid[j][k].type != CELL_EMPTY);
+		grid[j][k].type = CELL_FOOD;
 	}
 }
 
