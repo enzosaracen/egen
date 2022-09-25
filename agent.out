@@ -1,0 +1,4 @@
+cell_empty: move
+cell_agent: turn left
+cell_food: move
+cell_wall: turn right

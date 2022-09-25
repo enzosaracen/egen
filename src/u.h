@@ -15,8 +15,7 @@
 
 #define NAGENT	LG
 #define NFOOD	((LG*LG)*0.4)
-
-#define NWALL	0
+#define NWALL	(LG*2)
 
 #ifndef EXTERN
 #define EXTERN extern
