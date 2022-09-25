@@ -100,5 +100,5 @@ void start(void)
 			if(dtab[i][j] != 0.5)
 				dtab[i][j] = fabs(dtab[i][j]-AGENT_PAD);
 	agentinit();
-	loop(10, &step);
+	loop(0, &step);
 }

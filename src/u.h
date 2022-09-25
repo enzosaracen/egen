@@ -13,8 +13,9 @@
 #define ITER	100
 #define MUTATE	50	
 
-#define NAGENT	(LG)
+#define NAGENT	LG
 #define NFOOD	((LG*LG)*0.4)
+
 #define NWALL	0
 
 #ifndef EXTERN
