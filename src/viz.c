@@ -85,6 +85,7 @@ int step(void)
 	if(n++ >= ITER) {
 		printf("%d\n", foodtotal);
 		gridclear();
+		agentdump();
 		agentbreed();
 		n = 0;
 	}

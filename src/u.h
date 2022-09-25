@@ -11,7 +11,7 @@
 #define W	500
 #define LG	50
 #define ITER	100
-#define MUTATE	2000
+#define MUTATE	1000
 
 #define NAGENT	LG
 #define NFOOD	((LG*LG)*0.4)
@@ -43,9 +43,7 @@ enum {
 
 enum {
 	ACT_TLEFT,
-	ACT_TUP,
 	ACT_TRIGHT,
-	ACT_TDOWN,
 	ACT_MOVE,
 	NACT,
 };
@@ -54,7 +52,7 @@ struct Agent {
 	int	food;
 	int	dir;
 	int	front;
-	int	act[NTYPE][NDIR];
+	int	act[NTYPE];
 	int	x, y;
 };
 
@@ -80,6 +78,7 @@ void	start(void);
  *	agent.c
  */
 void	agentinit(void);
+void	agentdump(void);
 void	agentbreed(void);
 void	gridclear(void);
 void	gridinit(void);

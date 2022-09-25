@@ -9,14 +9,13 @@ int adtab[NDIR][2] = {
 	[DIR_DOWN] = 	{0, 1},
 };
 
-int randact(int j, int k)
+int randact(int f)
 {
 	int a;
 
 	do {
 		a = rand() % NACT;
-	} while(((j == CELL_WALL || j == CELL_AGENT) && a == ACT_MOVE)
-		|| (a == k));
+	} while(((f == CELL_WALL || f == CELL_AGENT) && a == ACT_MOVE));
 	return a;
 }
 
@@ -28,8 +27,7 @@ void agentinit(void)
 	for(i = 0; i < NAGENT; i++) {
 		a = &alist[i];
 		for(j = 0; j < NTYPE; j++)
-			for(k = 0; k < NDIR; k++)
-				alist[i].act[j][k] = randact(j, k);
+			alist[i].act[j] = randact(j);
 		do {
 			a->x = rand() % LG;
 			a->y = rand() % LG;
@@ -39,10 +37,53 @@ void agentinit(void)
 	}
 }
 
+void agentdump(void)
+{
+	int i, j, k, max;
+	FILE *f;
+	Agent *a;
+
+	max = -1;
+	for(i = 0; i < NAGENT; i++)
+		if(alist[i].food > max) {
+			max = alist[i].food;
+			a = &alist[i];
+		}
+	f = fopen("agent.out", "w");
+	for(i = 0; i < NTYPE; i++) {
+		switch(i) {
+		case CELL_EMPTY:
+			fprintf(f, "cell_empty: ");
+			break;
+		case CELL_AGENT:
+			fprintf(f, "cell_agent: ");
+			break;
+		case CELL_FOOD:
+			fprintf(f, "cell_food: ");
+			break;
+		case CELL_WALL:
+			fprintf(f, "cell_wall: ");
+			break;
+		}
+		switch(a->act[i]) {
+		case ACT_TLEFT:
+			fprintf(f, "turn left\n");
+			break;
+		case ACT_TRIGHT:
+			fprintf(f, "turn right\n");
+			break;
+		case ACT_MOVE:
+			fprintf(f, "move\n");
+			break;
+		}
+	}
+	fclose(f);
+}
+
 void agentbreed(void)
 {
 	int i, j, k, sum, dist[(int)NFOOD];
-	int abuf[NAGENT][NDIR][NTYPE];
+	int abuf[NAGENT][NTYPE];
 
 	sum = 0;
 	for(i = 0; i < NAGENT; i++) {
@@ -54,20 +95,17 @@ void agentbreed(void)
 		agentinit();
 		return;
 	}
-	for(i = 0; i < NAGENT; i++) {
-		for(j = 0; j < NTYPE; j++)
-			for(k = 0; k < NDIR; k++) {
-				if(rand()%MUTATE == 0)
-					abuf[i][j][k] = randact(j, k);
-				else
-					abuf[i][j][k] = alist[dist[rand()%sum]].act[j][k];
-			}
-	}
+	for(i = 0; i < NAGENT; i++)
+		for(j = 0; j < NTYPE; j++) {
+			if(rand()%MUTATE == 0)
+				abuf[i][j] = randact(j);
+			else
+				abuf[i][j] = alist[dist[rand()%sum]].act[j];
+		}
 	for(i = 0; i < NAGENT; i++) {
 		alist[i].food = 0;
 		for(j = 0; j < NTYPE; j++)
-			for(k = 0; k < NDIR; k++)
-				alist[i].act[j][k] = abuf[i][j][k];
+			alist[i].act[j] = abuf[i][j];
 		do {
 			alist[i].x = rand() % LG;
 			alist[i].y = rand() % LG;
@@ -121,8 +159,7 @@ void agentbreed(void)
 		grid[a1->y][a1->x].type = CELL_AGENT;
 		grid[a1->y][a1->x].agent = a1;
 	}
-}
-*/
+}*/
 
 void gridclear(void)
 {
@@ -169,12 +206,12 @@ void agentrun(void)
 		a->front = grid[ny][nx].type;
 		if(nx < 0 || nx >= LG || ny < 0 || ny >= LG)
 			a->front = CELL_WALL;
-		switch(a->act[a->front][a->dir]) {
+		switch(a->act[a->front]) {
 		case ACT_MOVE:
 			grid[a->y][a->x].type = CELL_EMPTY;
 			grid[a->y][a->x].agent = NULL;
-			a->y += adtab[a->dir][1];
-			a->x += adtab[a->dir][0];
+			a->y = ny;
+			a->x = nx;
 			if(a->front == CELL_FOOD) {
 				a->food++;
 				foodtotal++;
@@ -183,16 +220,12 @@ void agentrun(void)
 			grid[a->y][a->x].agent = a;
 			break;
 		case ACT_TLEFT:
-			a->dir = DIR_LEFT;
-			break;
-		case ACT_TUP:
-			a->dir = DIR_UP;
+			if(--a->dir < 0)
+				a->dir = DIR_DOWN;
 			break;
 		case ACT_TRIGHT:
-			a->dir = DIR_RIGHT;
-			break;
-		case ACT_TDOWN:
-			a->dir = DIR_DOWN;
+			if(++a->dir >= NDIR)
+				a->dir = DIR_LEFT;
 			break;
 		}
 	}
