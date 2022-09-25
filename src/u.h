@@ -11,9 +11,10 @@
 #define W	500
 #define LG	50
 #define ITER	100
+#define MUTATE	50	
 
-#define NAGENT	50
-#define NFOOD	1000
+#define NAGENT	(LG)
+#define NFOOD	((LG*LG)*0.4)
 #define NWALL	0
 
 #ifndef EXTERN

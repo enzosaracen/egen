@@ -50,7 +50,7 @@ void loop(uint32 ms, int (*run)(void))
 void init(void)
 {
 	SDL_Init(SDL_INIT_VIDEO);
-	scr = SDL_CreateWindow("gpx", SDL_WINDOWPOS_CENTERED,
+	scr = SDL_CreateWindow("egen", SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED, W, H, SDL_WINDOW_OPENGL);
 	rnd = SDL_CreateRenderer(scr, -1, 0);
 }

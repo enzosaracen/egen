@@ -41,9 +41,49 @@ void agentinit(void)
 
 void agentbreed(void)
 {
-	int i, j, k, m1, m2;
+	int i, j, k, sum, dist[(int)NFOOD];
+	int abuf[NAGENT][NDIR][NTYPE];
+
+	sum = 0;
+	for(i = 0; i < NAGENT; i++) {
+		for(j = sum; j < sum+alist[i].food; j++)
+			dist[j] = i;
+		sum += alist[i].food;
+	}
+	if(sum == 0) {
+		agentinit();
+		return;
+	}
+	for(i = 0; i < NAGENT; i++) {
+		for(j = 0; j < NTYPE; j++)
+			for(k = 0; k < NDIR; k++) {
+				if(rand()%MUTATE == 0)
+					abuf[i][j][k] = randact(j, k);
+				else
+					abuf[i][j][k] = alist[dist[rand()%sum]].act[j][k];
+			}
+	}
+	for(i = 0; i < NAGENT; i++) {
+		alist[i].food = 0;
+		for(j = 0; j < NTYPE; j++)
+			for(k = 0; k < NDIR; k++)
+				alist[i].act[j][k] = abuf[i][j][k];
+		do {
+			alist[i].x = rand() % LG;
+			alist[i].y = rand() % LG;
+		} while(grid[alist[i].y][alist[i].x].type != CELL_EMPTY);
+		grid[alist[i].y][alist[i].x].type = CELL_AGENT;
+		grid[alist[i].y][alist[i].x].agent = &alist[i];
+	}
+}
+
+/*
+void agentbreed(void)
+{
+	int i, j, k, m1, m2, sum;
 	int act1[NTYPE][NDIR], act2[NTYPE][NDIR];
-	Agent *a1, *a2;
+
+	Agent acpy[A]
 	
 	m1 = m2 = -1;
 	for(i = 0; i < NAGENT; i++) {
@@ -69,10 +109,10 @@ void agentbreed(void)
 		a1->food = a1->dir = 0;
 		for(j = 0; j < NTYPE; j++)
 			for(k = 0; k < NDIR; k++) {
-			//	if(rand() & 1)
+				if(rand()%MUTATE == 0)
+					a1->act[j][k] = randact(j, k);
+				else
 					a1->act[j][k] = rand() & 1 ? act1[j][k] : act2[j][k];
-			//	else
-			//		a1->act[j][k] = randact(j, k);
 			}
 
 		do {
@@ -82,7 +122,7 @@ void agentbreed(void)
 		grid[a1->y][a1->x].type = CELL_AGENT;
 		grid[a1->y][a1->x].agent = a1;
 	}
-}
+}*/
 
 void gridclear(void)
 {
