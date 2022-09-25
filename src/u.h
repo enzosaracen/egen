@@ -11,7 +11,7 @@
 #define W	500
 #define LG	50
 #define ITER	100
-#define MUTATE	50	
+#define MUTATE	150
 
 #define NAGENT	LG
 #define NFOOD	((LG*LG)*0.4)
@@ -91,3 +91,4 @@ EXTERN	SDL_Renderer	*rnd;
 EXTERN	int		quit;
 EXTERN	Cell		grid[LG][LG];
 EXTERN	int		foodtotal;
+EXTERN	int		drawtoggle;

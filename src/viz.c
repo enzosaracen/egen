@@ -76,10 +76,12 @@ int step(void)
 	if(n == 0)
 		gridinit();
 	input();
-	SDL_SetRenderDrawColor(rnd, COL(0));
-	SDL_RenderClear(rnd);
-	drawgrid();
-	SDL_RenderPresent(rnd);
+	if(drawtoggle) {
+		SDL_SetRenderDrawColor(rnd, COL(0));
+		SDL_RenderClear(rnd);
+		drawgrid();
+		SDL_RenderPresent(rnd);
+	}
 	if(n++ >= ITER) {
 		printf("%d\n", foodtotal);
 		gridclear();
@@ -95,6 +97,7 @@ void start(void)
 	int i, j;
 	Agent a;
 
+	drawtoggle = 1;
 	for(i = 0; i < NDIR; i++)
 		for(j = 0; j < 6; j++)
 			if(dtab[i][j] != 0.5)

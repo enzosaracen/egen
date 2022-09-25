@@ -22,6 +22,10 @@ void input(void)
 		case SDL_QUIT:
 			quit = 1;
 			break;
+		case SDL_KEYDOWN:
+			if(e.key.keysym.sym == SDLK_v)
+				drawtoggle = !drawtoggle;
+			break;
 		}
 }
 
