@@ -5,6 +5,6 @@ int main(void)
 {
 	srand(time(NULL));
 	init();
-	sim();
+	start();
 	SDL_Quit();
 }

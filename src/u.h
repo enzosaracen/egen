@@ -9,7 +9,12 @@
 
 #define H	500
 #define W	500
-#define LG	10	
+#define LG	50
+#define ITER	100
+
+#define NAGENT	50
+#define NFOOD	1000
+#define NWALL	0
 
 #ifndef EXTERN
 #define EXTERN extern
@@ -68,15 +73,19 @@ void	init(void);
 /*
  *	viz.c
  */
-void	sim(void);
+void	start(void);
 
 /*
  *	agent.c
  */
 void	agentinit(void);
+void	agentbreed(void);
+void	gridclear(void);
+void	gridinit(void);
 void	agentrun(void);
 
 EXTERN	SDL_Window	*scr;
 EXTERN	SDL_Renderer	*rnd;
 EXTERN	int		quit;
 EXTERN	Cell		grid[LG][LG];
+EXTERN	int		foodtotal;

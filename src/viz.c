@@ -71,16 +71,26 @@ void drawgrid(void)
 
 int step(void)
 {
+	static int n;
+
+	if(n == 0)
+		gridinit();
 	input();
 	SDL_SetRenderDrawColor(rnd, COL(0));
 	SDL_RenderClear(rnd);
 	drawgrid();
 	SDL_RenderPresent(rnd);
+	if(n++ >= ITER) {
+		printf("%d\n", foodtotal);
+		gridclear();
+		agentbreed();
+		n = 0;
+	}
 	agentrun();
 	return quit;
 }
 
-void sim(void)
+void start(void)
 {
 	int i, j;
 	Agent a;
@@ -90,5 +100,5 @@ void sim(void)
 			if(dtab[i][j] != 0.5)
 				dtab[i][j] = fabs(dtab[i][j]-AGENT_PAD);
 	agentinit();
-	loop(1000, &step);
+	loop(10, &step);
 }
