@@ -82,9 +82,8 @@ void agentbreed(void)
 {
 	int i, j, k, m1, m2, sum;
 	int act1[NTYPE][NDIR], act2[NTYPE][NDIR];
+	Agent *a1, *a2;
 
-	Agent acpy[A]
-	
 	m1 = m2 = -1;
 	for(i = 0; i < NAGENT; i++) {
 		if(alist[i].food > m1) {
@@ -122,7 +121,8 @@ void agentbreed(void)
 		grid[a1->y][a1->x].type = CELL_AGENT;
 		grid[a1->y][a1->x].agent = a1;
 	}
-}*/
+}
+*/
 
 void gridclear(void)
 {

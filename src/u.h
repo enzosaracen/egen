@@ -11,7 +11,7 @@
 #define W	500
 #define LG	50
 #define ITER	100
-#define MUTATE	150
+#define MUTATE	2000
 
 #define NAGENT	LG
 #define NFOOD	((LG*LG)*0.4)
